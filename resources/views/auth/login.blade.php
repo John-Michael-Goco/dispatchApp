@@ -138,17 +138,16 @@
                                     </button>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-12 text-center">
-                                    @if (Route::has('password.request'))
+                                    {{-- @if (Route::has('password.request'))
                                         <p class="mb-2">
                                             <a href="{{ route('password.request') }}"
                                                 class="text-primary fw-bold text-decoration-none">
                                                 <i class="fas fa-unlock-alt me-1"></i>{{ __('Forgot Your Password?') }}
                                             </a>
                                         </p>
-                                    @endif
+                                    @endif --}}
                                     <p class="mb-0">Don't have an account?
                                         <a href="{{ route('register') }}"
                                             class="text-primary fw-bold text-decoration-none">
