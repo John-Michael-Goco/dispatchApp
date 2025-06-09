@@ -36,4 +36,29 @@ app.component('example-component', ExampleComponent);
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
 
+// Request notification permission
+if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+    Notification.requestPermission();
+}
+
+// Listen for new emergencies
+window.Echo.channel('emergencies')
+    .listen('new-emergency', (e) => {
+        console.log('New emergency received:', e);
+        
+        // Show browser notification if permission is granted
+        if (Notification.permission === "granted") {
+            new Notification("New Emergency", {
+                body: `New emergency reported: ${e.incident}`,
+                icon: '/images/emergency-icon.png' // Make sure to add this icon to your public folder
+            });
+        }
+
+        // You can also trigger a custom event that your Vue components can listen to
+        window.dispatchEvent(new CustomEvent('new-emergency', { detail: e }));
+    })
+    .error((error) => {
+        console.error('Pusher error:', error);
+    });
+
 app.mount('#app');

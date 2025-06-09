@@ -20,6 +20,8 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
-        "@vitejs/plugin-vue": "^4.6.2"
+        "@vitejs/plugin-vue": "^4.6.2",
+        "laravel-echo": "^2.1.5",
+        "pusher-js": "^8.4.0"
     }
 }
