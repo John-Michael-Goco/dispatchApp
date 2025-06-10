@@ -476,7 +476,7 @@
                         <i class="bi bi-speedometer2"></i> Dashboard</a>
                     <a class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}" href="{{ route('admin.services.index') }}">
                         <i class="bi bi-gear"></i> Services</a>
-                    <a class="nav-link {{ request()->is('branches*') ? 'active' : '' }}" href="">
+                    <a class="nav-link {{ request()->is('admin/branches*') ? 'active' : '' }}" href="{{ route('admin.branches.index') }}">
                         <i class="bi bi-diagram-3"></i> Branches</a>
                     <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" href="">
                         <i class="bi bi-exclamation-triangle"></i> Incidents</a>

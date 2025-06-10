@@ -48,7 +48,7 @@
                                         <th class="text-center">Type</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Location</th>
-                                        <th class="text-center">Actions</th>
+                                        <th class="text-center">View</th>
                                     </tr>
                                 </thead>
                                 <tbody>
