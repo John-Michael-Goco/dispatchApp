@@ -430,7 +430,7 @@
                         <a class="nav-link {{ request()->is('admin/home') ? 'active' : '' }}"
                             href="{{ url('admin/home') }}">
                             <i class="bi bi-speedometer2"></i> Dashboard</a>
-                        <a class="nav-link {{ request()->is('services*') ? 'active' : '' }}" href="">
+                        <a class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}" href="{{ route('admin.services.index') }}">
                             <i class="bi bi-gear"></i> Services</a>
                         <a class="nav-link {{ request()->is('branches*') ? 'active' : '' }}" href="">
                             <i class="bi bi-diagram-3"></i> Branches</a>
@@ -474,7 +474,7 @@
                     <a class="nav-link {{ request()->is('admin/home') ? 'active' : '' }}"
                         href="{{ url('admin/home') }}">
                         <i class="bi bi-speedometer2"></i> Dashboard</a>
-                    <a class="nav-link {{ request()->is('services*') ? 'active' : '' }}" href="">
+                    <a class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}" href="{{ route('admin.services.index') }}">
                         <i class="bi bi-gear"></i> Services</a>
                     <a class="nav-link {{ request()->is('branches*') ? 'active' : '' }}" href="">
                         <i class="bi bi-diagram-3"></i> Branches</a>

@@ -5,15 +5,47 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class UnitController extends Controller
 {
     /**
      * Display a listing of the units.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $units = Unit::latest()->paginate(10);
+        $query = Unit::query();
+
+        // Search functionality
+        if ($request->has('search')) {
+            $search = $request->get('search');
+            $query->where(function (Builder $query) use ($search) {
+                $query->where('unit_code', 'like', "%{$search}%")
+                    ->orWhere('unit_type', 'like', "%{$search}%")
+                    ->orWhere('status', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->get('status') !== '') {
+            $query->where('status', $request->get('status'));
+        }
+
+        // Filter by unit type
+        if ($request->has('unit_type') && $request->get('unit_type') !== '') {
+            $query->where('unit_type', $request->get('unit_type'));
+        }
+
+        // Sort functionality
+        $sortField = $request->get('sort', 'created_at');
+        $sortDirection = $request->get('direction', 'desc');
+        
+        if (in_array($sortField, ['unit_code', 'unit_type', 'status', 'created_at'])) {
+            $query->orderBy($sortField, $sortDirection);
+        }
+
+        $units = $query->latest()->paginate(10)->withQueryString();
+
         return view('admin.units.index', compact('units'));
     }
 

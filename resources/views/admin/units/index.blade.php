@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <!-- Header section with title and action buttons -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0" style="font-size:1.5rem;"><i class="bi bi-truck"></i> Units</h1>
+            <h1 class="mb-0" style="font-size:1.5rem;"><i class="bi bi-geo-alt"></i> Units</h1>
             <div class="d-flex gap-2">
                 <!-- Create button -->
                 <a href="{{ route('admin.units.create') }}" class="btn btn-primary btn-sm">
