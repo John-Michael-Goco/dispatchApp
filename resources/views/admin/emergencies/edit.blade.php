@@ -6,7 +6,7 @@
             <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-header">
-                        <h2 class="mb-0" style="font-size:1.5rem;"><i class="bi bi-pencil"></i> Edit Emergency</h2>
+                        <h2 class="mb-0" style="font-size:1.5rem;"><i class="bi bi-pencil-square"></i> Edit Emergency</h2>
                     </div>
                     <div class="card-body">
                         @if ($errors->any())
@@ -22,7 +22,7 @@
                             <div class="alert alert-success">{{ session('success') }}</div>
                         @endif
                         
-                        <form action="{{ route('admin.emergencies.update', $emergency) }}" method="POST">
+                        <form action="{{ route('admin.emergencies.update', $emergency->id) }}" method="POST" id="editEmergencyForm">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
@@ -65,7 +65,8 @@
                                 <a href="{{ route('admin.emergencies.index') }}" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Back to List
                                 </a>
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="submitSpinner"></span>
                                     <i class="bi bi-save"></i> Update Emergency
                                 </button>
                             </div>
@@ -152,6 +153,22 @@
 
             document.getElementById('latitude').addEventListener('change', updateMarker);
             document.getElementById('longitude').addEventListener('change', updateMarker);
+
+            // Prevent double form submission
+            const form = document.getElementById('editEmergencyForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitSpinner = document.getElementById('submitSpinner');
+
+            form.addEventListener('submit', function(e) {
+                if (submitBtn.disabled) {
+                    e.preventDefault();
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitSpinner.classList.remove('d-none');
+                submitBtn.innerHTML = submitSpinner.outerHTML + ' Updating Emergency...';
+            });
         });
     </script>
 @endsection

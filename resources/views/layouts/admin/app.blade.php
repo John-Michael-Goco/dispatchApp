@@ -443,7 +443,10 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href=""><i class="bi bi-geo-alt"></i> Units</a>
+                                    <a class="nav-link {{ request()->is('admin/units*') ? 'active' : '' }}" 
+                                        href="{{ route('admin.units.index') }}">
+                                        <i class="bi bi-geo-alt"></i> Units
+                                    </a>
                                 </li>
                                 <li>
                                     <a class="nav-link {{ request()->is('admin/emergencies*') ? 'active' : '' }}"
@@ -484,7 +487,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href=""><i class="bi bi-geo-alt"></i> Units</a>
+                                <a class="nav-link {{ request()->is('admin/units*') ? 'active' : '' }}" 
+                                    href="{{ route('admin.units.index') }}">
+                                    <i class="bi bi-geo-alt"></i> Units
+                                </a>
                             </li>
                             <li>
                                 <a class="nav-link {{ request()->is('admin/emergencies*') ? 'active' : '' }}"

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\EmergencyController;
+use App\Http\Controllers\Admin\UnitController;
 
 // Public Routes
 Route::get('/', function () {
@@ -27,6 +28,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     // Emergency Management Routes
     Route::resource('emergencies', EmergencyController::class);
+    // Unit Management Routes
+    Route::resource('units', UnitController::class);
 });
 
 // User Routes

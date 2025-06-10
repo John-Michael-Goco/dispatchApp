@@ -19,7 +19,7 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('admin.emergencies.store') }}" method="POST">
+                        <form action="{{ route('admin.emergencies.store') }}" method="POST" id="createEmergencyForm">
                             @csrf
                             <div class="mb-3">
                                 <label for="incident" class="form-label">Incident Description</label>
@@ -59,7 +59,8 @@
                                 <a href="{{ route('admin.emergencies.index') }}" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Back to List
                                 </a>
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="submitSpinner"></span>
                                     <i class="bi bi-save"></i> Create Emergency
                                 </button>
                             </div>
@@ -146,6 +147,22 @@
 
             document.getElementById('latitude').addEventListener('change', updateMarker);
             document.getElementById('longitude').addEventListener('change', updateMarker);
+
+            // Prevent double form submission
+            const form = document.getElementById('createEmergencyForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitSpinner = document.getElementById('submitSpinner');
+
+            form.addEventListener('submit', function(e) {
+                if (submitBtn.disabled) {
+                    e.preventDefault();
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitSpinner.classList.remove('d-none');
+                submitBtn.innerHTML = submitSpinner.outerHTML + ' Creating Emergency...';
+            });
         });
     </script>
 @endsection 
