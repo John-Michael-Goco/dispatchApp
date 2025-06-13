@@ -30,8 +30,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     // Emergency Management Routes
     Route::resource('emergencies', EmergencyController::class);
-    // Unit Management Routes
-    Route::resource('units', UnitController::class);
     // Service Management Routes
     Route::resource('services', ServiceController::class);
     // Branch Management Routes

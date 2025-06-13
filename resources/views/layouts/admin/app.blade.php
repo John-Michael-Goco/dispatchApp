@@ -430,7 +430,8 @@
                         <a class="nav-link {{ request()->is('admin/home') ? 'active' : '' }}"
                             href="{{ url('admin/home') }}">
                             <i class="bi bi-speedometer2"></i> Dashboard</a>
-                        <a class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}" href="{{ route('admin.services.index') }}">
+                        <a class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}"
+                            href="{{ route('admin.services.index') }}">
                             <i class="bi bi-gear"></i> Services</a>
                         <a class="nav-link {{ request()->is('branches*') ? 'active' : '' }}" href="">
                             <i class="bi bi-diagram-3"></i> Branches</a>
@@ -443,9 +444,9 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="nav-link {{ request()->is('admin/units*') ? 'active' : '' }}" 
-                                        href="{{ route('admin.units.index') }}">
-                                        <i class="bi bi-geo-alt"></i> Units
+                                    <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}"
+                                        href="">
+                                        <i class="bi bi-geo-alt"></i> Responders
                                     </a>
                                 </li>
                                 <li>
@@ -474,33 +475,28 @@
                     <a class="nav-link {{ request()->is('admin/home') ? 'active' : '' }}"
                         href="{{ url('admin/home') }}">
                         <i class="bi bi-speedometer2"></i> Dashboard</a>
-                    <a class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}" href="{{ route('admin.services.index') }}">
+                    <a class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}"
+                        href="{{ route('admin.services.index') }}">
                         <i class="bi bi-gear"></i> Services</a>
-                    <a class="nav-link {{ request()->is('admin/branches*') ? 'active' : '' }}" href="{{ route('admin.branches.index') }}">
+                    <a class="nav-link {{ request()->is('admin/branches*') ? 'active' : '' }}"
+                        href="{{ route('admin.branches.index') }}">
                         <i class="bi bi-diagram-3"></i> Branches</a>
                     <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" href="">
                         <i class="bi bi-exclamation-triangle"></i> Incidents</a>
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="bi bi-truck"></i> Mobile Service
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="nav-link {{ request()->is('admin/units*') ? 'active' : '' }}" 
-                                    href="{{ route('admin.units.index') }}">
-                                    <i class="bi bi-geo-alt"></i> Units
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-link {{ request()->is('admin/emergencies*') ? 'active' : '' }}"
-                                    href="{{ route('admin.emergencies.index') }}">
-                                    <i class="bi bi-send"></i> Emergencies</a>
-                            </li>
-                        </ul>
-                    </div>
+                    <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}"
+                        href="">
+                        <i class="bi bi-geo-alt"></i> Responders
+                    </a>
+                    <a class="nav-link {{ request()->is('admin/emergencies*') ? 'active' : '' }}"
+                        href="{{ route('admin.emergencies.index') }}">
+                        <i class="bi bi-send"></i> Emergencies
+                    </a>
                     <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" href="">
-                        <i class="bi bi-people"></i> Users</a>
+                        <i class="bi bi-people"></i> Users
+                    </a>
+                    <a class="nav-link {{ request()->is('info*') ? 'active' : '' }}" href="">
+                        <i class="bi bi-gear"></i> Personal Info
+                    </a>
                 </nav>
             </div>
             <form class="logout" id="logout-form" action="{{ route('logout') }}" method="POST">
@@ -586,7 +582,7 @@
                 // Add click handler to close button
                 notification.querySelector('.notification-close').addEventListener('click', (e) => {
                     e
-                .stopPropagation(); // Prevents the click from triggering the notification click
+                        .stopPropagation(); // Prevents the click from triggering the notification click
                     removeNotification();
                 });
 

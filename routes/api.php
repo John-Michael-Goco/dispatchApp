@@ -30,10 +30,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/emergencies/{emergency}', [EmergencyController::class, 'update']);
     Route::delete('/emergencies/{emergency}', [EmergencyController::class, 'destroy']);
 });
-
-// Unit routes
-Route::get('/units', [UnitController::class, 'index']);
-Route::post('/units', [UnitController::class, 'store']);
-Route::get('/units/{unit}', [UnitController::class, 'show']);
-Route::put('/units/{unit}', [UnitController::class, 'update']);
-Route::delete('/units/{unit}', [UnitController::class, 'destroy']);
