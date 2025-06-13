@@ -47,7 +47,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
+    public function userInfo()
+    {
+        return $this->hasOne(UserInfo::class);
+    }
+
+    public function responder()
+    {
+        return $this->hasOne(Responder::class);
+    }
+
     public function isAdmin()
     {
         return $this->role === 'admin';
@@ -57,4 +67,10 @@ class User extends Authenticatable
     {
         return $this->role === 'user';
     }
+
+    public function isResponder()
+    {
+        return $this->role === 'responder';
+    }
+    
 }

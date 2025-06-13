@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\EmergencyController;
-use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\BranchController;
+use App\Http\Controllers\Admin\RespondersController;
+use App\Http\Controllers\Admin\UserController;
 
 // Public Routes
 Route::get('/', function () {
@@ -34,6 +35,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('services', ServiceController::class);
     // Branch Management Routes
     Route::resource('branches', BranchController::class);
+    // Responder Management Routes
+    // Route::resource('responders', RespondersController::class);
+    // User Management Routes
+    Route::resource('users', UserController::class);
 });
 
 // User Routes
