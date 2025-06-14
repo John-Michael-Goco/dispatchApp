@@ -6,7 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\EmergencyController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\BranchController;
-use App\Http\Controllers\Admin\RespondersController;
+use App\Http\Controllers\Admin\ResponderController;
 use App\Http\Controllers\Admin\UserController;
 
 // Public Routes
@@ -36,9 +36,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Branch Management Routes
     Route::resource('branches', BranchController::class);
     // Responder Management Routes
-    // Route::resource('responders', RespondersController::class);
+    Route::resource('responders', ResponderController::class);
     // User Management Routes
     Route::resource('users', UserController::class);
+});
+
+// Respodner Routes
+Route::middleware(['auth'])->prefix('responder')->name('responder.')->group(function () {
+    // Dashboard
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    // Add other user routes here
 });
 
 // User Routes

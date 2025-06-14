@@ -117,6 +117,48 @@
                                 </div>
                             </div>
 
+                            <!-- Responder Information Card -->
+                            <div id="responderCard" class="card mt-4" style="display: none;">
+                                <div class="card-header bg-primary text-white">
+                                    <h3 class="mb-0" style="font-size:1.2rem;"><i class="bi bi-truck"></i> Responder Information</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="responder_code" class="form-label">Responder Code</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                                                <input type="text" class="form-control @error('responder_code') is-invalid @enderror" 
+                                                    id="responder_code" name="responder_code" value="{{ old('responder_code') }}"
+                                                    placeholder="Enter responder code">
+                                                @error('responder_code')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="service_id" class="form-label">Service Type</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="bi bi-truck"></i></span>
+                                                <select class="form-select @error('service_id') is-invalid @enderror" 
+                                                    id="service_id" name="service_id">
+                                                    <option value="">Select Service</option>
+                                                    @foreach($services as $service)
+                                                        <option value="{{ $service->id }}" {{ old('service_id') == $service->id ? 'selected' : '' }}>
+                                                            {{ $service->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('service_id')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="d-flex justify-content-between">
                                 <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
                                     <i class="bi bi-arrow-left"></i> Back to List
@@ -138,6 +180,30 @@
         const form = document.getElementById('createUserForm');
         const submitBtn = document.getElementById('submitBtn');
         const submitSpinner = document.getElementById('submitSpinner');
+        const roleSelect = document.getElementById('role');
+        const responderCard = document.getElementById('responderCard');
+        const serviceSelect = document.getElementById('service_id');
+        const responderCode = document.getElementById('responder_code');
+
+        // Show/hide responder fields based on role selection
+        roleSelect.addEventListener('change', function() {
+            if (this.value === 'responder') {
+                responderCard.style.display = 'block';
+                serviceSelect.required = true;
+                responderCode.required = true;
+            } else {
+                responderCard.style.display = 'none';
+                serviceSelect.required = false;
+                responderCode.required = false;
+            }
+        });
+
+        // Initialize fields visibility on page load
+        if (roleSelect.value === 'responder') {
+            responderCard.style.display = 'block';
+            serviceSelect.required = true;
+            responderCode.required = true;
+        }
 
         form.addEventListener('submit', function() {
             submitBtn.disabled = true;

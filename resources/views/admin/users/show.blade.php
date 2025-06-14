@@ -19,6 +19,75 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        @if($user->role === 'responder' && $user->responder)
+                            <!-- Responder Information -->
+                            <div class="card mb-4 border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h3 class="mb-0" style="font-size:1.2rem;">
+                                        <i class="bi bi-truck"></i> Responder Information
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <i class="bi bi-upc-scan fs-4 text-success"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h4 class="h6 mb-1 text-muted">Responder Code</h4>
+                                                    <p class="mb-0 fw-bold fs-5">{{ $user->responder->responder_code }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <i class="bi bi-truck fs-4 text-success"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h4 class="h6 mb-1 text-muted">Service Type</h4>
+                                                    <p class="mb-0 fw-bold fs-5">{{ $user->responder->service->name }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <i class="bi bi-circle fs-4 text-success"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h4 class="h6 mb-1 text-muted">Status</h4>
+                                                    <p class="mb-0">
+                                                        <span class="badge bg-{{ 
+                                                            $user->responder->status === 'active' ? 'success' : 
+                                                            ($user->responder->status === 'busy' ? 'warning' : 
+                                                            ($user->responder->status === 'inactive' ? 'danger' : 'secondary')) 
+                                                        }}">
+                                                            {{ ucfirst($user->responder->status) }}
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <i class="bi bi-geo-alt fs-4 text-success"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h4 class="h6 mb-1 text-muted">Location</h4>
+                                                    <p class="mb-0 fw-bold">
+                                                        {{ $user->responder->latitude }}, {{ $user->responder->longitude }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="row">
                             <!-- Basic Information -->
                             <div class="col-md-6 mb-4">

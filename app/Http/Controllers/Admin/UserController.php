@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\Responder;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -29,13 +31,18 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with('userInfo');
+        $query = User::with('userInfo')
+            ->where('id', '!=', Auth::id())  // Exclude current user
+            ->where(function($q) {
+                $q->where('name', '!=', 'admin')  // Exclude default admin
+                   ->orWhere('role', '!=', 'admin');  // Include non-admin users
+            });
 
         if ($request->has('search')) {
             $search = $request->input('search');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                    ->orWhere('phone', 'like', "%{$search}%");
             });
         }
 
@@ -43,7 +50,15 @@ class UserController extends Controller
             $query->where('role', $request->input('role'));
         }
 
-        $users = $query->latest()->paginate(10);
+        // Handle sorting
+        if ($request->has('sort')) {
+            $direction = $request->input('direction', 'asc');
+            $query->orderBy($request->input('sort'), $direction);
+        } else {
+            $query->latest();
+        }
+
+        $users = $query->paginate(10);
 
         return view('admin.users.index', compact('users'));
     }
@@ -53,7 +68,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $services = Service::all();
+        return view('admin.users.create', compact('services'));
     }
 
     /**
@@ -69,6 +85,8 @@ class UserController extends Controller
             'email' => 'required|email',
             'address' => 'required|string',
             'date_of_birth' => 'required|date',
+            'responder_code' => 'required_if:role,responder|string',
+            'service_id' => 'required_if:role,responder|exists:services,id',
         ]);
 
         // Create user
@@ -86,6 +104,18 @@ class UserController extends Controller
             'address' => $validated['address'],
             'date_of_birth' => $validated['date_of_birth'],
         ]);
+
+        // If user is a responder, create responder record
+        if ($validated['role'] === 'responder') {
+            Responder::create([
+                'user_id' => $user->id,
+                'service_id' => $validated['service_id'],
+                'responder_code' => $validated['responder_code'],
+                'status' => 'inactive',
+                'longitude' => 0, 
+                'latitude' => 0,
+            ]);
+        }
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User created successfully.');
@@ -105,8 +135,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $user->load('userInfo');
-        return view('admin.users.edit', compact('user'));
+        $user->load(['userInfo', 'responder']);
+        $services = Service::all();
+        return view('admin.users.edit', compact('user', 'services'));
     }
 
     /**
@@ -121,6 +152,8 @@ class UserController extends Controller
             'email' => 'required|email',
             'address' => 'required|string',
             'date_of_birth' => 'required|date',
+            'responder_code' => 'required_if:role,responder|string',
+            'service_id' => 'required_if:role,responder|exists:services,id',
         ]);
 
         // Update user
@@ -137,6 +170,30 @@ class UserController extends Controller
             'date_of_birth' => $validated['date_of_birth'],
         ]);
 
+        // Handle responder information
+        if ($validated['role'] === 'responder') {
+            if ($user->responder) {
+                // Update existing responder record
+                $user->responder->update([
+                    'service_id' => $validated['service_id'],
+                    'responder_code' => $validated['responder_code'],
+                ]);
+            } else {
+                // Create new responder record
+                Responder::create([
+                    'user_id' => $user->id,
+                    'service_id' => $validated['service_id'],
+                    'responder_code' => $validated['responder_code'],
+                    'status' => 'active', // Default status
+                    'longitude' => 0,
+                    'latitude' => 0,
+                ]);
+            }
+        } else if ($user->responder) {
+            // If role is changed from responder to something else, delete the responder record
+            $user->responder->delete();
+        }
+
         return redirect()->route('admin.users.edit', compact('user'))
             ->with('success', 'User updated successfully.');
     }
@@ -150,4 +207,4 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')
             ->with('success', 'User deleted successfully.');
     }
-} 
+}

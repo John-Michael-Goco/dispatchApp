@@ -20,6 +20,8 @@ class SetLayout
             $user = Auth::user();
             if ($user->role === 'admin') {
                 view()->share('layout', 'layouts.admin.app');
+            } else if($user->role === 'responder'){
+                view()->share('layout', 'layouts.responder.app');
             } else {
                 view()->share('layout', 'layouts.user.app');
             }
