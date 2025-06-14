@@ -430,22 +430,35 @@
                         <a class="nav-link {{ request()->is('admin/home') ? 'active' : '' }}"
                             href="{{ url('admin/home') }}">
                             <i class="bi bi-speedometer2"></i> Dashboard</a>
+
                         <a class="nav-link {{ request()->is('admin/services*') ? 'active' : '' }}"
                             href="{{ route('admin.services.index') }}">
                             <i class="bi bi-gear"></i> Services</a>
-                        <a class="nav-link {{ request()->is('branches*') ? 'active' : '' }}" href="">
+
+                        <a class="nav-link {{ request()->is('branches*') ? 'active' : '' }}"
+                            href="{{ route('admin.branches.index') }}">
                             <i class="bi bi-diagram-3"></i> Branches</a>
-                        <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" href="">
+
+                        <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" 
+                            href="">
                             <i class="bi bi-exclamation-triangle"></i> Incidents</a>
-                        <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}"
+
+                        <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}" 
                             href="">
                             <i class="bi bi-geo-alt"></i> Responders</a>
+
                         <a class="nav-link {{ request()->is('admin/emergencies*') ? 'active' : '' }}"
                             href="{{ route('admin.emergencies.index') }}">
                             <i class="bi bi-send"></i> Emergencies</a>
-                        <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" 
-                            href="{{route('admin.users.index')}}">
+
+                        <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}"
+                            href="{{ route('admin.users.index') }}">
                             <i class="bi bi-people"></i> Users</a>
+                            
+                        <a class="nav-link {{ request()->is('admin/personal-info*') ? 'active' : '' }}"
+                            href="{{ route('admin.personal-info.index') }}">
+                            <i class="bi bi-gear"></i> Personal Info
+                        </a>
                     </nav>
                 </div>
                 <form class="logout" id="logout-form-offcanvas" action="{{ route('logout') }}" method="POST">
@@ -475,19 +488,19 @@
                     <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" href="">
                         <i class="bi bi-exclamation-triangle"></i> Incidents
                     </a>
-                    <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}"
-                        href="">
+                    <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}" href="">
                         <i class="bi bi-geo-alt"></i> Responders
                     </a>
                     <a class="nav-link {{ request()->is('admin/emergencies*') ? 'active' : '' }}"
                         href="{{ route('admin.emergencies.index') }}">
                         <i class="bi bi-send"></i> Emergencies
                     </a>
-                    <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" 
-                        href="{{route('admin.users.index')}}">
+                    <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}"
+                        href="{{ route('admin.users.index') }}">
                         <i class="bi bi-people"></i> Users
                     </a>
-                    <a class="nav-link {{ request()->is('info*') ? 'active' : '' }}" href="">
+                    <a class="nav-link {{ request()->is('admin/personal-info*') ? 'active' : '' }}"
+                        href="{{ route('admin.personal-info.index') }}">
                         <i class="bi bi-gear"></i> Personal Info
                     </a>
                 </nav>

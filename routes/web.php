@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\EmergencyController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\BranchController;
+use App\Http\Controllers\Admin\PersonalInformationController;
 use App\Http\Controllers\Admin\ResponderController;
 use App\Http\Controllers\Admin\UserController;
 
@@ -39,6 +40,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('responders', ResponderController::class);
     // User Management Routes
     Route::resource('users', UserController::class);
+    // Personal Information Management Routes
+    Route::resource('personal-info', PersonalInformationController::class);
 });
 
 // Respodner Routes
