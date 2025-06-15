@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card shadow">
                     <div class="card-header">
                         <h2 class="mb-0" style="font-size:1.5rem;"><i class="bi bi-person-plus"></i> Add New User</h2>
@@ -118,7 +118,7 @@
                             </div>
 
                             <!-- Responder Information Card -->
-                            <div id="responderCard" class="card mt-4" style="display: none;">
+                            <div id="responderCard" class="card my-3" style="display: none;">
                                 <div class="card-header bg-primary text-white">
                                     <h3 class="mb-0" style="font-size:1.2rem;"><i class="bi bi-truck"></i> Responder Information</h3>
                                 </div>

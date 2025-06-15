@@ -35,8 +35,8 @@ class BranchController extends Controller
         // Get paginated results
         $branches = $query->latest()->paginate(10)->withQueryString();
         
-        // Get all services for the filter dropdown
-        $services = Service::orderBy('name')->get();
+        // Get all services for the filter dropdown that start with BR
+        $services = Service::where('name', 'like', 'BR%')->orderBy('name')->get();
 
         return view('admin.branches.index', compact('branches', 'services'));
     }
@@ -46,7 +46,7 @@ class BranchController extends Controller
      */
     public function create()
     {
-        $services = Service::orderBy('name')->get();
+        $services = Service::where('name', 'like', 'BR%')->orderBy('name')->get();
         return view('admin.branches.create', compact('services'));
     }
 
@@ -59,7 +59,12 @@ class BranchController extends Controller
             'name' => 'required|string|max:255',
             'service_id' => 'required|exists:services,id',
             'address' => 'required|string',
-            'contact_number' => 'required|string|max:20',
+            'contact_number' => [
+                'required',
+                'string',
+                'regex:/^9\d{9}$/',
+                'size:10'
+            ],
             'status' => 'required|in:active,inactive',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
@@ -95,7 +100,7 @@ class BranchController extends Controller
      */
     public function edit(Branch $branch)
     {
-        $services = Service::orderBy('name')->get();
+        $services = Service::where('name', 'like', 'BR%')->orderBy('name')->get();
         return view('admin.branches.edit', compact('branch', 'services'));
     }
 
@@ -108,7 +113,12 @@ class BranchController extends Controller
             'name' => 'required|string|max:255',
             'service_id' => 'required|exists:services,id',
             'address' => 'required|string',
-            'contact_number' => 'required|string|max:20',
+            'contact_number' => [
+                'required',
+                'string',
+                'regex:/^9\d{9}$/',
+                'size:10'
+            ],
             'status' => 'required|in:active,inactive',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',

@@ -11,12 +11,22 @@
                     <i class="bi bi-plus-circle"></i> Add Responder
                 </a>
                 <!-- Search form -->
-                <form action="{{ route('admin.responders.index') }}" method="GET" class="d-flex gap-2">
+                <form action="{{ route('admin.responders.index') }}" method="GET" class="d-flex gap-2" id="filterForm">
+                    <!-- Service filter dropdown -->
+                    <select class="form-select form-select-sm" name="service_id" style="width: 200px;" onchange="this.form.submit()">
+                        <option value="">All Services</option>
+                        @foreach ($services as $service)
+                            <option value="{{ $service->id }}"
+                                {{ request('service_id') == $service->id ? 'selected' : '' }}>
+                                {{ $service->name }}
+                            </option>
+                        @endforeach
+                    </select>
                     <div class="input-group" style="width: 300px;">
                         <input type="text" class="form-control form-control-sm" name="search"
-                            placeholder="Search responders..." value="{{ request('search') }}">
-                        <button class="btn btn-primary btn-sm" type="submit"><i class="bi bi-search"></i></button>
-                        @if (request('search'))
+                            placeholder="Search responders..." value="{{ request('search') }}"
+                            onkeyup="this.form.submit()">
+                        @if (request('search') || request('service_id'))
                             <a href="{{ route('admin.responders.index') }}" class="btn btn-secondary btn-sm"><i
                                     class="bi bi-x-circle"></i></a>
                         @endif

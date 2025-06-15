@@ -50,9 +50,19 @@
                             <!-- Contact number input field -->
                             <div class="mb-3">
                                 <label for="contact_number" class="form-label">Contact Number</label>
-                                <input type="text" class="form-control @error('contact_number') is-invalid @enderror"
-                                    id="contact_number" name="contact_number"
-                                    value="{{ old('contact_number', $branch->contact_number) }}" required>
+                                <div class="input-group">
+                                    <span class="input-group-text">+63</span>
+                                    <input type="number" 
+                                        class="form-control @error('contact_number') is-invalid @enderror"
+                                        id="contact_number" 
+                                        name="contact_number"
+                                        value="{{ old('contact_number', $branch->contact_number) }}" 
+                                        pattern="9\d{9}"
+                                        maxlength="10"
+                                        placeholder="9XXXXXXXXX"
+                                        required>
+                                </div>
+                                <div class="form-text">Enter 10-digit number starting with 9 (e.g., 9123456789)</div>
                                 @error('contact_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

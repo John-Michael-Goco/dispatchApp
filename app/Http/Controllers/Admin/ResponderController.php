@@ -42,7 +42,7 @@ class ResponderController extends Controller
             });
         }
 
-        if ($request->has('service_id')) {
+        if ($request->filled('service_id')) {
             $query->where('service_id', $request->input('service_id'));
         }
 
@@ -51,7 +51,7 @@ class ResponderController extends Controller
         }
 
         $responders = $query->latest()->paginate(10);
-        $services = Service::orderBy('name')->get();
+        $services = Service::where('name', 'like', 'MS%')->orderBy('name')->get();
 
         return view('admin.responders.index', compact('responders', 'services'));
     }
@@ -61,7 +61,7 @@ class ResponderController extends Controller
      */
     public function create()
     {
-        $services = Service::orderBy('name')->get();
+        $services = Service::where('name', 'like', 'MS%')->orderBy('name')->get();
         return view('admin.responders.create', compact('services'));
     }
 
@@ -132,7 +132,7 @@ class ResponderController extends Controller
      */
     public function edit(Responder $responder)
     {
-        $services = Service::orderBy('name')->get();
+        $services = Service::where('name', 'like', 'MS%')->orderBy('name')->get();
         return view('admin.responders.edit', compact('responder', 'services'));
     }
 
@@ -149,6 +149,7 @@ class ResponderController extends Controller
             'email' => 'required|email|max:255|unique:user_info,email,' . $responder->user->userInfo->id,
             'address' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
+            'password' => 'nullable|min:8',
         ]);
 
         DB::beginTransaction();
@@ -160,10 +161,17 @@ class ResponderController extends Controller
             ]);
 
             // Update user
-            $responder->user->update([
+            $userData = [
                 'name' => $validated['name'],
                 'phone' => $validated['phone'],
-            ]);
+            ];
+
+            // Only update password if provided
+            if (!empty($validated['password'])) {
+                $userData['password'] = Hash::make($validated['password']);
+            }
+
+            $responder->user->update($userData);
 
             // Update user info
             $responder->user->userInfo->update([
@@ -173,7 +181,7 @@ class ResponderController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('admin.responders.index')
+            return redirect()->route('admin.responders.edit', $responder)
                 ->with('success', 'Responder updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();

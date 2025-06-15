@@ -78,6 +78,12 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
+        // Check if service has any associated branches or responders
+        if ($service->branches()->exists() || $service->responders()->exists()) {
+            return redirect()->route('admin.services.index')
+                ->with('error', 'Cannot delete service. It has associated branches or responders.');
+        }
+
         $service->delete();
 
         return redirect()->route('admin.services.index')

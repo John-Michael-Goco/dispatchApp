@@ -10,7 +10,6 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -86,47 +85,40 @@ class UserController extends Controller
             'email' => 'required|email',
             'address' => 'required|string',
             'date_of_birth' => 'required|date',
-            'responder_code' => 'required_if:role,responder|string',
-            'service_id' => 'required_if:role,responder|exists:services,id',
+            'responder_code' => 'nullable|required_if:role,responder|string|unique:responders,responder_code',
+            'service_id' => 'nullable|required_if:role,responder|exists:services,id',
         ]);
 
-        DB::beginTransaction();
-        try {
-            // Create user
-            $user = User::create([
-                'name' => $validated['name'],
-                'phone' => $validated['phone'],
-                'password' => Hash::make($validated['password']),
-                'role' => $validated['role'],
-            ]);
+        // Create user
+        $user = User::create([
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
+        ]);
 
-            // Create user info
-            UserInfo::create([
+        // Create user info
+        UserInfo::create([
+            'user_id' => $user->id,
+            'email' => $validated['email'],
+            'address' => $validated['address'],
+            'date_of_birth' => $validated['date_of_birth'],
+        ]);
+
+        // If user is a responder, create responder record
+        if ($validated['role'] === 'responder') {
+            Responder::create([
                 'user_id' => $user->id,
-                'email' => $validated['email'],
-                'address' => $validated['address'],
-                'date_of_birth' => $validated['date_of_birth'],
+                'service_id' => $validated['service_id'],
+                'responder_code' => $validated['responder_code'],
+                'status' => 'inactive',
+                'longitude' => 0, 
+                'latitude' => 0,
             ]);
-
-            // If user is a responder, create responder record
-            if ($validated['role'] === 'responder') {
-                Responder::create([
-                    'user_id' => $user->id,
-                    'service_id' => $validated['service_id'],
-                    'responder_code' => $validated['responder_code'],
-                    'status' => 'inactive',
-                    'longitude' => 0,
-                    'latitude' => 0,
-                ]);
-            }
-
-            DB::commit();
-            return redirect()->route('admin.users.index')
-                ->with('success', 'User created successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Failed to create user. Please try again.');
         }
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User created successfully.');
     }
 
     /**
@@ -160,57 +152,58 @@ class UserController extends Controller
             'email' => 'required|email',
             'address' => 'required|string',
             'date_of_birth' => 'required|date',
-            'responder_code' => 'required_if:role,responder|string',
-            'service_id' => 'required_if:role,responder|exists:services,id',
+            'responder_code' => 'nullable|required_if:role,responder|string|unique:responders,responder_code,' . ($user->responder ? $user->responder->id : 'NULL'),
+            'service_id' => 'nullable|required_if:role,responder|exists:services,id',
+            'password' => 'nullable|string|min:8',
         ]);
 
-        DB::beginTransaction();
-        try {
-            // Update user
-            $user->update([
-                'name' => $validated['name'],
-                'phone' => $validated['phone'],
-                'role' => $validated['role'],
-            ]);
+        // Update user
+        $userData = [
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'role' => $validated['role'],
+        ];
 
-            // Update user info
-            $user->userInfo->update([
-                'email' => $validated['email'],
-                'address' => $validated['address'],
-                'date_of_birth' => $validated['date_of_birth'],
-            ]);
-
-            // Handle responder information
-            if ($validated['role'] === 'responder') {
-                if ($user->responder) {
-                    $user->responder->update([
-                        'service_id' => $validated['service_id'],
-                        'responder_code' => $validated['responder_code'],
-                    ]);
-                } else {
-                    Responder::create([
-                        'user_id' => $user->id,
-                        'service_id' => $validated['service_id'],
-                        'responder_code' => $validated['responder_code'],
-                        'status' => 'inactive',
-                        'longitude' => 0,
-                        'latitude' => 0,
-                    ]);
-                }
-            } else {
-                // If role is changed from responder to something else, delete responder record
-                if ($user->responder) {
-                    $user->responder->delete();
-                }
-            }
-
-            DB::commit();
-            return redirect()->route('admin.users.index')
-                ->with('success', 'User updated successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Failed to update user. Please try again.');
+        // Only update password if it's provided
+        if (!empty($validated['password'])) {
+            $userData['password'] = Hash::make($validated['password']);
         }
+
+        $user->update($userData);
+
+        // Update user info
+        $user->userInfo->update([
+            'email' => $validated['email'],
+            'address' => $validated['address'],
+            'date_of_birth' => $validated['date_of_birth'],
+        ]);
+
+        // Handle responder information
+        if ($validated['role'] === 'responder') {
+            if ($user->responder) {
+                // Update existing responder record
+                $user->responder->update([
+                    'service_id' => $validated['service_id'],
+                    'responder_code' => $validated['responder_code'],
+                ]);
+            } else {
+                // Create new responder record
+                Responder::create([
+                    'user_id' => $user->id,
+                    'service_id' => $validated['service_id'],
+                    'responder_code' => $validated['responder_code'],
+                    'status' => 'inactive', // Default status
+                    'longitude' => 0,
+                    'latitude' => 0,
+                ]);
+            }
+        } else if ($user->responder) {
+            // If role is changed from responder to something else, delete the responder record
+            $user->responder->delete();
+        }
+
+        return redirect()->route('admin.users.edit', compact('user'))
+            ->with('success', 'User updated successfully.');
     }
 
     /**
@@ -218,17 +211,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        DB::beginTransaction();
-        try {
-            // Delete the user (this will cascade delete user_info and responder records)
-            $user->delete();
-
-            DB::commit();
-            return redirect()->route('admin.users.index')
-                ->with('success', 'User deleted successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Failed to delete user. Please try again.');
-        }
+        $user->delete();
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User deleted successfully.');
     }
 }

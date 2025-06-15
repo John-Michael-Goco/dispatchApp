@@ -14,4 +14,20 @@ class Service extends Model
         'name',
         'description'
     ];
+
+    /**
+     * Get the branches associated with this service.
+     */
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
+    }
+
+    /**
+     * Get the responders associated with this service.
+     */
+    public function responders()
+    {
+        return $this->hasMany(Responder::class);
+    }
 }

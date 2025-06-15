@@ -28,6 +28,10 @@
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session('success') }} </div>
         @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }} </div>
+        @endif
 
         <div class="card shadow">
             <div class="card-body">
@@ -37,6 +41,8 @@
                             <tr>
                                 <th class="text-center" style="width: 250px;">Name</th>
                                 <th>Description</th>
+                                <th class="text-center" style="width: 100px;">Branches</th>
+                                <th class="text-center" style="width: 100px;">Responders</th>
                                 <th class="text-center" style="width: 150px;">Created At</th>
                                 <th class="text-center" style="width: 120px;">Actions</th>
                             </tr>
@@ -46,6 +52,12 @@
                                 <tr>
                                     <td class="text-center fw-semibold">{{ $service->name }}</td>
                                     <td class="text-muted">{{ Str::limit($service->description, 50) }}</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-info">{{ $service->branches()->count() }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-primary">{{ $service->responders()->count() }}</span>
+                                    </td>
                                     <td class="text-center text-muted">{{ $service->created_at->format('M d, Y H:i') }}</td>
                                     <td>
                                         <div class="d-flex justify-content-center gap-1">

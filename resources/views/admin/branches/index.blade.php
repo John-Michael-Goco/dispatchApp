@@ -10,9 +10,9 @@
                     <i class="bi bi-plus-circle"></i> Add New Branch
                 </a>
                 <!-- Filter and search form -->
-                <form action="{{ route('admin.branches.index') }}" method="GET" class="d-flex gap-2">
+                <form action="{{ route('admin.branches.index') }}" method="GET" class="d-flex gap-2" id="filterForm">
                     <!-- Service filter dropdown -->
-                    <select class="form-select form-select-sm" name="service_id" style="width: 200px;">
+                    <select class="form-select form-select-sm" name="service_id" style="width: 200px;" onchange="this.form.submit()">
                         <option value="">All Services</option>
                         @foreach ($services as $service)
                             <option value="{{ $service->id }}"
@@ -24,8 +24,8 @@
                     <!-- Search input and buttons -->
                     <div class="input-group" style="width: 300px;">
                         <input type="text" class="form-control form-control-sm" name="search"
-                            placeholder="Search branches..." value="{{ request('search') }}">
-                        <button class="btn btn-primary btn-sm" type="submit"><i class="bi bi-search"></i></button>
+                            placeholder="Search branches..." value="{{ request('search') }}"
+                            onkeyup="this.form.submit()">
                         @if (request('search') || request('service_id'))
                             <a href="{{ route('admin.branches.index') }}" class="btn btn-secondary btn-sm"><i
                                     class="bi bi-x-circle"></i></a>

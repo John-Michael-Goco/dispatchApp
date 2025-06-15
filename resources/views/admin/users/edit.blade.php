@@ -133,7 +133,7 @@
                             </div>
 
                             <!-- Responder Information Card -->
-                            <div id="responderCard" class="card mt-4" style="display: {{ $user->role === 'responder' ? 'block' : 'none' }};">
+                            <div id="responderCard" class="card my-3" style="display: {{ $user->role === 'responder' ? 'block' : 'none' }};">
                                 <div class="card-header bg-primary text-white">
                                     <h3 class="mb-0" style="font-size:1.2rem;"><i class="bi bi-truck"></i> Responder Information</h3>
                                 </div>
