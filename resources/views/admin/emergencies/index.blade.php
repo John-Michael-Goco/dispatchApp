@@ -45,7 +45,6 @@
                                     <tr>
                                         <th class="text-center" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Incident</th>
                                         <th class="text-center">Location</th>
-                                        <th class="text-center">Reported By</th>
                                         <th class="text-center">Created At</th>
                                         <th class="text-center">View</th>
                                     </tr>
@@ -60,7 +59,6 @@
                                                     View Location
                                                 </a>
                                             </td>
-                                            <td class="text-center">{{ $emergency->user->name }}</td>
                                             <td class="text-center">{{ $emergency->created_at->format('M d, Y H:i') }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('admin.emergencies.show', $emergency) }}" class="btn btn-info btn-sm">

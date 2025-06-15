@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Responder;
 use App\Models\Service;
 use App\Models\User;
+use App\Models\UserInfo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class ResponderController extends Controller
 {
@@ -60,10 +62,7 @@ class ResponderController extends Controller
     public function create()
     {
         $services = Service::orderBy('name')->get();
-        $users = User::where('role', 'responder')
-            ->whereDoesntHave('responder')
-            ->get();
-        return view('admin.responders.create', compact('services', 'users'));
+        return view('admin.responders.create', compact('services'));
     }
 
     /**
@@ -72,20 +71,51 @@ class ResponderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|size:10|regex:/^[0-9]{10}$/|unique:users',
+            'password' => 'required|string|min:8',
+            'email' => 'required|email|unique:user_info',
+            'address' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
             'service_id' => 'required|exists:services,id',
-            'longitude' => 'required|numeric',
-            'latitude' => 'required|numeric',
-            'status' => 'required|in:active,inactive,maintenance,busy',
+            'responder_code' => 'required|string|max:255|unique:responders',
         ]);
 
-        // Generate unique responder code
-        $validated['responder_code'] = 'RES-' . strtoupper(Str::random(8));
+        DB::beginTransaction();
+        try {
+            // Create user
+            $user = User::create([
+                'name' => $validated['name'],
+                'phone' => $validated['phone'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'responder',
+            ]);
 
-        $responder = Responder::create($validated);
+            // Create user info
+            UserInfo::create([
+                'user_id' => $user->id,
+                'email' => $validated['email'],
+                'address' => $validated['address'],
+                'date_of_birth' => $validated['date_of_birth'],
+            ]);
 
-        return redirect()->route('admin.responders.index')
-            ->with('success', 'Responder created successfully.');
+            // Create responder
+            Responder::create([
+                'user_id' => $user->id,
+                'service_id' => $validated['service_id'],
+                'responder_code' => $validated['responder_code'],
+                'status' => 'inactive',
+                'longitude' => 0,
+                'latitude' => 0,
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.responders.index')
+                ->with('success', 'Responder created successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to create responder. Please try again.');
+        }
     }
 
     /**
@@ -93,7 +123,7 @@ class ResponderController extends Controller
      */
     public function show(Responder $responder)
     {
-        $responder->load(['user', 'service']);
+        $responder->load(['user.userInfo', 'service']);
         return view('admin.responders.show', compact('responder'));
     }
 
@@ -113,15 +143,42 @@ class ResponderController extends Controller
     {
         $validated = $request->validate([
             'service_id' => 'required|exists:services,id',
-            'longitude' => 'required|numeric',
-            'latitude' => 'required|numeric',
-            'status' => 'required|in:active,inactive,maintenance,busy',
+            'responder_code' => 'required|string|max:255|unique:responders,responder_code,' . $responder->id,
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|size:10|regex:/^[0-9]{10}$/|unique:users,phone,' . $responder->user->id,
+            'email' => 'required|email|max:255|unique:user_info,email,' . $responder->user->userInfo->id,
+            'address' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
         ]);
 
-        $responder->update($validated);
+        DB::beginTransaction();
+        try {
+            // Update responder
+            $responder->update([
+                'service_id' => $validated['service_id'],
+                'responder_code' => $validated['responder_code'],
+            ]);
 
-        return redirect()->route('admin.responders.index')
-            ->with('success', 'Responder updated successfully.');
+            // Update user
+            $responder->user->update([
+                'name' => $validated['name'],
+                'phone' => $validated['phone'],
+            ]);
+
+            // Update user info
+            $responder->user->userInfo->update([
+                'email' => $validated['email'],
+                'address' => $validated['address'],
+                'date_of_birth' => $validated['date_of_birth'],
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.responders.index')
+                ->with('success', 'Responder updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to update responder. Please try again.');
+        }
     }
 
     /**
@@ -129,8 +186,20 @@ class ResponderController extends Controller
      */
     public function destroy(Responder $responder)
     {
-        $responder->delete();
-        return redirect()->route('admin.responders.index')
-            ->with('success', 'Responder deleted successfully.');
+        DB::beginTransaction();
+        try {
+            // Delete the responder record
+            $responder->delete();
+            
+            // Delete the associated user and user info (cascade delete)
+            $responder->user->delete();
+
+            DB::commit();
+            return redirect()->route('admin.responders.index')
+                ->with('success', 'Responder deleted successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to delete responder. Please try again.');
+        }
     }
 }

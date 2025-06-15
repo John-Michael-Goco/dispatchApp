@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('latitude');
             $table->string('longitude');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('status', ['read', 'unread',])->default('unread');
             $table->timestamps();
             $table->softDeletes();
         });

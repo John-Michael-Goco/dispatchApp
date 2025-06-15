@@ -45,11 +45,12 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="mb-4">
-                            <h6 class="text-muted mb-2">Reported At</h6>
+                            <h6 class="text-muted mb-2">Address</h6> 
+                            <!--  -->
                             <p class="mb-0">
-                                <i class="bi bi-clock"></i> {{ $emergency->created_at->format('M d, Y H:i') }}
+                                <i class="bi bi-map"></i> Autofilled Address using the given coordinates by using google 
                             </p>
                         </div>
 
@@ -59,6 +60,13 @@
                                 <i class="bi bi-geo-alt"></i> 
                                 <span class="fw-semibold">Latitude:</span> {{ $emergency->latitude }} | 
                                 <span class="fw-semibold">Longitude:</span> {{ $emergency->longitude }}
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="text-muted mb-2">Reported At</h6>
+                            <p class="mb-0">
+                                <i class="bi bi-clock"></i> {{ $emergency->created_at->format('M d, Y H:i') }}
                             </p>
                         </div>
                     </div>

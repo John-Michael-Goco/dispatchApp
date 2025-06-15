@@ -444,7 +444,7 @@
                             <i class="bi bi-exclamation-triangle"></i> Incidents</a>
 
                         <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}" 
-                            href="">
+                            href="{{ route('admin.responders.index') }}">
                             <i class="bi bi-geo-alt"></i> Responders</a>
 
                         <a class="nav-link {{ request()->is('admin/emergencies*') ? 'active' : '' }}"
@@ -488,7 +488,8 @@
                     <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" href="">
                         <i class="bi bi-exclamation-triangle"></i> Incidents
                     </a>
-                    <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}" href="">
+                    <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}" 
+                        href="{{ route('admin.responders.index') }}">
                         <i class="bi bi-geo-alt"></i> Responders
                     </a>
                     <a class="nav-link {{ request()->is('admin/emergencies*') ? 'active' : '' }}"
