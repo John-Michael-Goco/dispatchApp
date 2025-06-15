@@ -439,11 +439,7 @@
                             href="{{ route('admin.branches.index') }}">
                             <i class="bi bi-diagram-3"></i> Branches</a>
 
-                        <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" 
-                            href="">
-                            <i class="bi bi-exclamation-triangle"></i> Incidents</a>
-
-                        <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}" 
+                        <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}"
                             href="{{ route('admin.responders.index') }}">
                             <i class="bi bi-geo-alt"></i> Responders</a>
 
@@ -451,10 +447,14 @@
                             href="{{ route('admin.emergencies.index') }}">
                             <i class="bi bi-send"></i> Emergencies</a>
 
+                        <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" 
+                            href="">
+                            <i class="bi bi-exclamation-triangle"></i> Incident History</a>
+
                         <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}"
                             href="{{ route('admin.users.index') }}">
                             <i class="bi bi-people"></i> Users</a>
-                            
+
                         <a class="nav-link {{ request()->is('admin/personal-info*') ? 'active' : '' }}"
                             href="{{ route('admin.personal-info.index') }}">
                             <i class="bi bi-gear"></i> Personal Info
@@ -485,16 +485,16 @@
                         href="{{ route('admin.branches.index') }}">
                         <i class="bi bi-diagram-3"></i> Branches
                     </a>
-                    <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" href="">
-                        <i class="bi bi-exclamation-triangle"></i> Incidents
-                    </a>
-                    <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}" 
+                    <a class="nav-link {{ request()->is('admin/responders*') ? 'active' : '' }}"
                         href="{{ route('admin.responders.index') }}">
                         <i class="bi bi-geo-alt"></i> Responders
                     </a>
                     <a class="nav-link {{ request()->is('admin/emergencies*') ? 'active' : '' }}"
                         href="{{ route('admin.emergencies.index') }}">
                         <i class="bi bi-send"></i> Emergencies
+                    </a>
+                    <a class="nav-link {{ request()->is('incidents*') ? 'active' : '' }}" href="">
+                        <i class="bi bi-exclamation-triangle"></i> Incident History
                     </a>
                     <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}"
                         href="{{ route('admin.users.index') }}">

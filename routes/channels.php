@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Broadcast::channel('emergencies', function ($user) {
-    return Auth::check(); // Only authenticated users can listen
+    return $user->role === 'admin'; // Only admin users can listen
 });

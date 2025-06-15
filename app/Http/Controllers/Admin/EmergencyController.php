@@ -76,6 +76,11 @@ class EmergencyController extends Controller
      */
     public function show(Emergency $emergency)
     {
+        // Mark emergency as read when viewed
+        if ($emergency->status === 'unread') {
+            $emergency->update(['status' => 'read']);
+        }
+        
         return view('admin.emergencies.show', compact('emergency'));
     }
 

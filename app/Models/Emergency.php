@@ -20,6 +20,7 @@ class Emergency extends Model
         'latitude',
         'longitude',
         'user_id',
+        'status',
     ];
 
     /**

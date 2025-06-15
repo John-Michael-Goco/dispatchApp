@@ -38,6 +38,7 @@ class NewEmergencyCreated implements ShouldBroadcast
             'user' => [
                 'name' => $this->emergency->user->name
             ],
+            'status' => $this->emergency->status,
             'created_at' => $this->emergency->created_at->format('M d, Y h:i A'),
         ];
     }
